@@ -1,50 +1,67 @@
 ﻿using ApiConciertos.Interfaces;
 using ApiConciertos.Models;
+using ApiConciertos.Persistencia;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiConciertos.Services
 {
     public class EventosService : IEventosServices
     {
-        private static List<Eventos> _eventos = new List<Eventos>
+        
+
+        private readonly ApplicationDbContext _context;
+
+        public EventosService(ApplicationDbContext context)
         {
-new Eventos { id_evento = Guid.NewGuid(), nombre_evento="Quiz n1", artista="Inges", isActive=1},
-        };
+            _context = context;
+        }
 
-        public List<Eventos> GetAll() => _eventos.Where(e => e.isActive == 1).ToList();
+        public async Task<List<Eventos>> GetAll()
+        {
+           return await _context.Eventos.Where(e => e.isActive == 1).ToListAsync();
+        }
 
-        public Eventos getByid(Guid id) => _eventos.FirstOrDefault(e => e.id_evento == id);
+        public async Task<Eventos> getByid(Guid id) => await _context.Eventos.FindAsync(id);
 
         // Add the required method to implement the interface
-        public Eventos getById(Guid id) => getByid(id);
-
-        public Eventos Create(Eventos newEvent)
+        public async Task<Eventos> getById(Guid id)
         {
-            newEvent.id_evento = Guid.NewGuid();
-            _eventos.Add(newEvent);
+            return await getById(id);
+        }
+
+        public async Task<Eventos> Create(Eventos newEvent)
+        {
+            _context.Eventos.Add(newEvent);
+            await _context.SaveChangesAsync();
             return newEvent;
         }
 
-        public bool Update(Guid id, Eventos editedEvent)
+        public async Task<bool> Update(Guid id, Eventos editedEvent)
         {
-            var eventoExiste = getByid(id);
+            var eventoExiste = await getByid(id);
             if (eventoExiste == null) return false;
 
             eventoExiste.nombre_evento = editedEvent.nombre_evento;
             eventoExiste.fecha_evento = editedEvent.fecha_evento;
             eventoExiste.artista = editedEvent.artista;
 
+            await _context.SaveChangesAsync(); 
+
             return true;
 
         }
-        public bool ChangeStatus(Guid id)
+        public async Task<bool> ChangeStatus(Guid id)
         {
-            var existe = getByid(id);
+            var existe = await getByid(id);
             if (existe == null) return false;
 
             existe.isActive = existe.isActive == 1 ? 0 : 1;
 
+            await _context.SaveChangesAsync();
+
             return true;
         }
+
     }
 
 }
