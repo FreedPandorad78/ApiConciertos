@@ -7,7 +7,6 @@ namespace ApiConciertos.Services
 {
     public class EventosService : IEventosServices
     {
-        
 
         private readonly ApplicationDbContext _context;
 
@@ -21,14 +20,9 @@ namespace ApiConciertos.Services
            return await _context.Eventos.Where(e => e.isActive == 1).ToListAsync();
         }
 
-        public async Task<Eventos> getByid(Guid id) => await _context.Eventos.FindAsync(id);
+        public async Task<Eventos?> getById(Guid id) => await _context.Eventos.FindAsync(id);
 
-        // Add the required method to implement the interface
-        public async Task<Eventos> getById(Guid id)
-        {
-            return await getById(id);
-        }
-
+      
         public async Task<Eventos> Create(Eventos newEvent)
         {
             _context.Eventos.Add(newEvent);
@@ -38,7 +32,7 @@ namespace ApiConciertos.Services
 
         public async Task<bool> Update(Guid id, Eventos editedEvent)
         {
-            var eventoExiste = await getByid(id);
+            var eventoExiste = await getById(id);
             if (eventoExiste == null) return false;
 
             eventoExiste.nombre_evento = editedEvent.nombre_evento;
@@ -52,7 +46,7 @@ namespace ApiConciertos.Services
         }
         public async Task<bool> ChangeStatus(Guid id)
         {
-            var existe = await getByid(id);
+            var existe = await getById(id);
             if (existe == null) return false;
 
             existe.isActive = existe.isActive == 1 ? 0 : 1;
