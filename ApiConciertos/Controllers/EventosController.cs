@@ -17,7 +17,7 @@ namespace ApiConciertos.Controllers
             _eventService = eventosService;
         }
         public IActionResult Index()
-        {
+        { 
             return View();
         }
 
