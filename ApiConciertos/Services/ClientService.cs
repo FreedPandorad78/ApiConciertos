@@ -1,4 +1,4 @@
-﻿using ApiConciertos.DAO;
+﻿
 using ApiConciertos.Interfaces;
 using ApiConciertos.Models;
 using ApiConciertos.Persistencia;
@@ -6,42 +6,38 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiConciertos.Services
 {
-    public class EventosService : IEventosService
+    public class ClientService : IClientService
     {
-
-
         private readonly ApplicationDbContext _context;
 
-        public EventosService(ApplicationDbContext context)
+        public ClientService(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<List<Eventos>> GetAll()
+        public async Task<List<Clientes>> GetAll()
         {
-            return await _context.Events.Where(e => e.isActive == 1).ToListAsync();
+            return await _context.Clients.Where(e => e.isActive == 1).ToListAsync();
         }
 
-        public async Task<Eventos> getById(Guid id) => await _context.Events.FindAsync(id);
+        public async Task<Clientes> getById(Guid id) => await _context.Clients.FindAsync(id);
 
 
-        public async Task<Eventos> Create(Eventos newEvent)
+        public async Task<Clientes> Create(Clientes newClient)
         {
             //Agregamos el registro a la lista
-            _context.Events.Add(newEvent);
+            _context.Clients.Add(newClient);
             await _context.SaveChangesAsync();
-            return newEvent;
+            return newClient;
         }
 
-        public async Task<bool> Update(Guid id, Eventos editedEvent)
+        public async Task<bool> Update(Guid id, Clientes editClient)
         {
             //validar la existencia de un ente supremo
-            var eventoExiste = await getById(id);
-            if (eventoExiste == null) return false;
+            var clientExist = await getById(id);
+            if (clientExist == null) return false;
 
-            eventoExiste.nombre_evento = editedEvent.nombre_evento;
-            eventoExiste.fecha_evento = editedEvent.fecha_evento;
-            eventoExiste.artista = editedEvent.artista;
+            clientExist.nombre_cliente = editClient.nombre_cliente;
 
             await _context.SaveChangesAsync();
 
@@ -60,7 +56,5 @@ namespace ApiConciertos.Services
 
             return true;
         }
-
-
     }
 }

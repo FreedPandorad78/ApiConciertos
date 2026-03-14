@@ -2,10 +2,11 @@
 
 namespace ApiConciertos.Interfaces
 {
-    public interface IEventosServices
+    public interface IEventosService
     {
-       Task<List<Eventos>> GetAll();
-         Task<Eventos?> getById(Guid id);
+        Task<List<Eventos>> GetAll();
+        Task<Eventos?> getById(Guid id);
+
         Task<Eventos> Create(Eventos evento);
 
         Task<bool> Update(Guid id, Eventos evento);

@@ -15,8 +15,9 @@ namespace ApiConciertos.Persistencia
            //listado de clases que se van a mapear a tablas de la base de datos
         public DbSet<Eventos> Eventos { get; set; }
         public DbSet<Boleta> Tickets { get; set; }
-        
-         
-    
+        public DbSet<Clientes> Clients { get; set; }
+
+       
+
     }
 }
